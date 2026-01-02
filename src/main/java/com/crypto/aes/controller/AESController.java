@@ -47,7 +47,7 @@ public class AESController {
      * @return encrypted data as Base64 string
      */
     @PostMapping(value = "/encrypt", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> encrypt(@RequestBody String planText) {
+    public ResponseEntity<String> encrypt(@RequestBody(required = false) String planText) {
         if (planText == null || planText.isBlank()) {
             log.warn("Encryption request received with empty or null data.");
             return ResponseEntity.badRequest().body("Input data cannot be empty.");
@@ -71,7 +71,7 @@ public class AESController {
      * @return decrypted plain text
      */
     @PostMapping(value = "/decrypt", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> decrypt(@RequestBody String encryptedData) {
+    public ResponseEntity<String> decrypt(@RequestBody(required = false) String encryptedData) {
         if (encryptedData == null || encryptedData.isBlank()) {
             log.warn("Decryption request received with empty or null data.");
             return ResponseEntity.badRequest().body("Input data cannot be empty.");
