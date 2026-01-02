@@ -1,3 +1,11 @@
+server:
+  port: 5000
+
 spring:
   application:
     name: java-crypto-aes-poc
+
+crypto:
+  aes:
+    password: "YourStrongSecretPasswordHere"
+    salt: "RandomSecureSaltValue"
