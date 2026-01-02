@@ -6,14 +6,17 @@ package com.crypto.aes.service;
 public interface EncryptionService {
 
     /**
-     * Encrypts the given plain text using AES-256 encryption.
+     * Encrypts the given data using AES-256-GCM encryption.
      *
-     * @param plainText the text to encrypt (must not be null or empty)
-     * @return a Base64-encoded encrypted string
-     * @throws IllegalArgumentException                 if {@code plainText} is null or empty
+     * <p>This method supports both text and binary data. The encrypted output
+     * is a Base64-encoded string that includes the IV and ciphertext.</p>
+     *
+     * @param data the input data to encrypt (must not be null or empty)
+     * @return a Base64-encoded encrypted string containing IV + ciphertext
+     * @throws IllegalArgumentException                 if {@code data} is null or empty
      * @throws com.crypto.aes.exception.CryptoException if encryption fails
      */
-    String encrypt(String plainText);
+    String encrypt(byte[] data);
 
     /**
      * Decrypts the given Base64-encoded encrypted text using AES-256 decryption.

@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -46,8 +47,8 @@ public class AESController {
      * @param planText plain text to encrypt
      * @return encrypted data as Base64 string
      */
-    @PostMapping(value = "/encrypt", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> encrypt(@RequestBody(required = false) String planText) {
+    @PostMapping(value = "/encrypt/text", consumes = MediaType.TEXT_PLAIN_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<String> encryptText(@RequestBody(required = false) String planText) {
         if (planText == null || planText.isBlank()) {
             log.warn("Encryption request received with empty or null data.");
             return ResponseEntity.badRequest().body("Input data cannot be empty.");
@@ -55,7 +56,7 @@ public class AESController {
 
         try {
             log.info("Processing encryption request for payload: {}", planText);
-            String encryptedData = encryptionService.encrypt(planText);
+            String encryptedData = encryptionService.encrypt(planText.getBytes(StandardCharsets.UTF_8));
             log.info("Encryption successful for request payload (length: {}).", planText.length());
             return ResponseEntity.ok(encryptedData);
         } catch (ServiceException ex) {

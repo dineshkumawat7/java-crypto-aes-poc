@@ -75,16 +75,16 @@ public class AES256 {
     /**
      * Encrypts plain text using AES-256-GCM.
      *
-     * @param plainText the plain text to encrypt
+     * @param data     the data to encrypt
      * @param password  the password used for key derivation
      * @param salt      the salt used for key derivation
      * @return Base64-encoded encrypted string (IV + ciphertext)
      * @throws CryptoException if encryption fails
      */
-    public static String encrypt(String plainText, String password, String salt) {
-        if (plainText == null || plainText.isEmpty()) {
-            log.warn("Encryption skipped: input plain text is null or empty.");
-            return plainText;
+    public static String encrypt(byte[] data, String password, String salt) {
+        if (data == null || data.length == 0) {
+            log.warn("Encryption skipped: input data is null or empty.");
+            return null;
         }
         try {
             log.debug("Starting AES-256 encryption process.");
@@ -96,7 +96,7 @@ public class AES256 {
             Cipher cipher = Cipher.getInstance(CIPHER_ALGO);
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, new GCMParameterSpec(TAG_LENGTH_BIT, iv));
 
-            byte[] cipherText = cipher.doFinal(plainText.getBytes(StandardCharsets.UTF_8));
+            byte[] cipherText = cipher.doFinal(data);
 
             byte[] combined = ByteBuffer.allocate(iv.length + cipherText.length)
                     .put(iv)

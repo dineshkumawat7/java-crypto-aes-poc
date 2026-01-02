@@ -24,25 +24,30 @@ public class EncryptionServiceImpl implements EncryptionService {
     private AESProperties aesProperties;
 
     /**
-     * Encrypts the given plain text using AES-256-GCM.
+     * Encrypts the given byte array using AES-256-GCM.
      *
-     * @param plainText plain text to encrypt
-     * @return Base64-encoded encrypted string
+     * @param data the input data to encrypt (can be text or binary)
+     * @return Base64-encoded encrypted string containing IV + ciphertext
+     * @throws IllegalArgumentException if the input data is null or empty
      * @throws CryptoException if encryption fails
      */
     @Override
-    public String encrypt(String plainText) {
-        if (!StringUtils.hasText(plainText)) {
+    public String encrypt(byte[] data) {
+        if (data == null || data.length == 0) {
             log.warn("Encryption requested with null or empty input data.");
             throw new IllegalArgumentException("Input data cannot be null or empty for encryption.");
         }
 
         try {
-            log.debug("Starting encryption for input data (length: {}).", plainText.length());
-            String encryptedData = AES256.encrypt(plainText, aesProperties.getPassword(), aesProperties.getSalt());
-            log.info("Encryption completed successfully (input length: {}, encrypted length: {}).",
-                    plainText.length(), encryptedData.length());
-            return encryptedData;
+            log.debug("Starting encryption for input data (length: {}).", data.length);
+            String encryptedData = AES256.encrypt(data, aesProperties.getPassword(), aesProperties.getSalt());
+            if (encryptedData != null && !encryptedData.isEmpty()) {
+                log.info("Encryption completed successfully (input length: {}, encrypted length: {}).",
+                        data.length, encryptedData.length());
+                return encryptedData;
+            } else {
+                return null;
+            }
         } catch (CryptoException ex) {
             log.error("Encryption failed due to a cryptographic error.", ex);
             throw ex;
